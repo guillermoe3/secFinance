@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analysis check</title>
+</head>
+<body>
+    <h1> Esto es un test de analysis con VT</h1>
+
+
+
+    <form action="/analysis" method="POST">
+
+        <label for="ioc">Insertar IOC a analizar</label>
+        <input type="text" name=ioc>
+        <br>
+        <label form="select">Seleccione IOC para analizar: </label>
+        <select name="select">
+            <option value="ip" selected>IP</option>
+            <option value="url">URL</option>
+            <option value="domain">Domain</option>
+            <option value="hash">Hash</option>
+          </select>
+        <button type="submit" value="send">Enviar</button>
+
+    </form>
+
+    <% if(locals.result){ %> 
+        <p>Reputación:   <%= result.reputation %> </p>
+        <p>Resultado:</p>
+        <% if(locals.result.resultado){ %> 
+        <ul>
+            <% result.resultado.forEach(element => { %>
+             <li><%= element %> </li>
+            <% }) %>
+            <% } %> 
+        </ul>
+        <p>WhoIs:   <%= result.whois %> </p>
+  
+          <% } %> 
+
+</body>
+</html>
