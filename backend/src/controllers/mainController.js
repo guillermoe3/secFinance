@@ -6,7 +6,7 @@ const theSameKey = defaultTimedInstance.setKey('3154df46b6cd5db1c4d1d57137850102
 
 let mainController = {
     index: function (req, res) {
-        res.render("home");
+        res.render("index");
     },
     analysis: function (req, res) {
         res.render("analysis");

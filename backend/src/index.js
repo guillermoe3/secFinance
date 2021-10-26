@@ -3,7 +3,7 @@ const app = express();
 const path = require('path');
 
 //server init
-app.set("port", process.env.PORT || 3002);
+app.set("port", process.env.PORT || 3003);
 app.listen(app.get("port"), () => console.log("Server start http://localhost:"+app.get("port")));
 
 //app access public
@@ -24,3 +24,7 @@ app.use(main);
 //routes analysis
 const analysis = require("./routes/analysis");
 app.use(analysis);
+
+//routes alerts
+const alerts= require("./routes/alerts");
+app.use(alerts);

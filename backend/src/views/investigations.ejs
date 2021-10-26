@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Investigation</title>
+</head>
+<body>
+
+    <h1>Crear investigación</h1>
+
+    <form method="post" action="/investigation">
+
+        <label for="title">Titulo</label>
+        <input type="text" name="title">
+        <label for="description">Descripción</label>
+        <textarea name="description"></textarea>
+        <label for="isPublic">Es público?</label>
+        <input type="checkbox" name="ispublic">
+
+        <button type="submit" value="crear">Crear Investigación </button>
+    
+    </form>
+    
+</body>
+</html>
