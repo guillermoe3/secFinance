@@ -9,13 +9,15 @@ module.exports = {
     save: async function(ioc){
         try {
             
-            ioc = JSON.parse(ioc);
+           // ioc = JSON.parse(ioc);
             console.log("ESTO ES IOC:" +ioc.ioc);
            let obj =  await db.InvestigationDetail.create({
                 id_investigation: 1,
                 description: ioc.description,
-                ioc: JSON.stringify(ioc.ioc),
-                result: JSON.stringify(ioc.result)
+                ioc: ioc.ioc,
+                result: JSON.stringify(ioc.result),
+                whois: JSON.stringify(ioc.whois),
+                timestamp: ioc.timestamp
 
             });
             console.log("El Objeto guardado es:"+obj)

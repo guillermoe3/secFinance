@@ -17,6 +17,12 @@ module.exports = (sequelize, DataTypes) => {
         },
         result: {
             type: DataTypes.STRING
+        },
+        whois: {
+            type: DataTypes.STRING
+        },
+        timestamp: {
+            type: DataTypes.DATE
         }
      
 

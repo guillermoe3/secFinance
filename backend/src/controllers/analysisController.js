@@ -1,8 +1,10 @@
-const db = require("../database/models")
+const dotEnv = require("dotenv").config();
+const db = require("../database/models"); 
 const nvt = require("node-virustotal");
-const defaultTimedInstance = nvt.makeAPI();
-const theSameKey = defaultTimedInstance.setKey('3154df46b6cd5db1c4d1d57137850102624f51b1cd47b999fb109754d6cc9c35');
-const utils = require("./utils")
+const defaultTimedInstance = nvt.makeAPI(10000);
+const vt_api = process.env.TOKEN_VT;
+const theSameKey = defaultTimedInstance.setKey(vt_api);
+const utilsAnalysis = require("./utilsAnalysis")
 
 
 //let analysisController = 
@@ -19,9 +21,10 @@ module.exports = {
     },
     create: async function (req, res) {
         //let checked = req.body.ispublic;
+        console.log(req.body)
         
         try {
-        await db.Investigation.create({
+        const objCreate = await db.Investigation.create({
             id_analyst: 1,
             id_user: 1, 
             closed: false, 
@@ -36,31 +39,143 @@ module.exports = {
             
             });
         //console.log(db.Investigation.id_investigation); 
-        return res.redirect("analysis", );
+        //return res.redirect("analysis", );
+
+        return res.send(JSON.stringify(objCreate))
             
         } catch (error) {
             console.log(error);
             
         }
     },
-    check: function (req, res) {
+    check2: function (req, res) {
 
+        console.log(req.body)
+
+        //req.body recibo el type, ioc, y notes. 
         let ioc = req.body.ioc;
-        console.log(ioc+" "+req.body.select);
+        if(req.body.type == "ip"){
 
-        if(req.body.select == "ip"){
-
+            
             const theSameObject = defaultTimedInstance.ipLookup(ioc, function(err, value){
                 if (err) {
                   console.log('Well, crap.');
                   console.log(err);
                   return;
                 }
-
-                //console.log(value)
                
-               let datos = JSON.parse(value);
+                let datos = JSON.parse(value);
+                let lastAnalysis = datos.data.attributes.last_analysis_stats;
+               
+                let whoisData = datos.data.attributes.whois
+                //parse WhoisData
+                const str = whoisData;
+                const toObject = (str) => {
+                  const json = str.replace(/([^\:]+)\:([^\n]+)\n/g, (_, p1, p2) => {
+                    return `"${p1.replace(/\s+/g, '')}":"${p2.trim()}",`;
+                  });
+                  return JSON.parse(`{${json.slice(0, -1)}}`);
+                };
+    
+                let whoisInfo = toObject(whoisData);
+
+                let whois = {
+                    organization: whoisInfo.Organization,
+                    cidr: whoisInfo.CIDR,
+                    country: whoisInfo.Country,
+                    city: whoisInfo.City,
+                    address: whoisInfo.Address,
+                    description: whoisInfo.descr
+                }
+                //Armo json para devolver al front y guardar en DB.
+                let data = {
+                    ioc: req.body.ioc,
+                    description: req.body.description,
+                    result: lastAnalysis,
+                    whois: whois,
+                    timestamp: Date.now()
+                }
+
+                //guardar datos en DB
+                let saveObject = utilsAnalysis.save(data);//JSON.stringify(
+
+
+                
+
+                res.send(data);
+              });
+            
+
+        }else if (req.body.type == "url"){
+            //const hashed = nvt.sha256('http://wikionemore.com/');
+            const hashed = nvt.sha256(ioc);
+            const theSameObject = defaultTimedInstance.urlLookup(hashed, function(err, value){
+                if (err) {
+                  console.log('Well, crap.');
+                  console.log(err);
+                  return;
+                }
+                console.log(JSON.stringify(value));
+                res.send(value);
+              });
+
+        }else if (req.body.type == "hash"){
+            //res.send("recibi un hash");
+            //08a542fe7f8450d2c66b5e428872860d584bc5be714a50293a10aef415310fe8
+
+
+            const theSameObject = defaultTimedInstance.fileLookup(ioc, function(err, value){
+                if (err) {
+                  console.log('Well, crap.');
+                  console.log(err);
+                  return;
+                }
+                console.log(JSON.stringify(value));
+                
+                res.send(value);
+              });
+
+        }else if (req.body.type == "domain"){
+            
+            const theSameObject = defaultTimedInstance.domainLookup(ioc, function(err, value){
+                if (err) {
+                  console.log('Well, crap.');
+                  console.log(err);
+                  return;
+                }
+                console.log(JSON.stringify(value));
+                res.send(value);
+              });
+            
+            
+            
+
+        }
+
+
+
+    },
+    check: function (req, res) {
+
+        //console.log(req.body)
+
+        let ioc = req.body.ioc;
+        console.log(ioc+" "+req.body.select);
+
+        if(req.body.select == "ip"){
+            //console.log(process.env)
+
+            const theSameObject = defaultTimedInstance.ipLookup(ioc, function(err, value){
+                if (err) {
+                  console.log('Well, crap.');
+
+                  console.log(err);
+                  return;
+                }
+
+                let datos = JSON.parse(value);
                 let whois = datos.data.attributes.whois//.split("\n");
+                console.log(datos.data);
     
                 const str = whois;
                 const toObject = (str) => {
@@ -72,6 +187,9 @@ module.exports = {
                 //console.log(toObject(str));
     
                 let whoisInfo = toObject(whois);
+
+                console.log("esto es whoisInfo"+JSON.stringify(whoisInfo));
+
                 let whoIs2 = {
                     organization: whoisInfo.Organization,
                     cidr: whoisInfo.CIDR,
@@ -95,7 +213,7 @@ module.exports = {
                     result: objResp
                 }
                 //el metodo create de sequelize te devuelve el objeto guardado1!!!!!
-               let hola2 =  utils.save(JSON.stringify(obj));
+               let hola2 =  utilsAnalysis.save(JSON.stringify(obj));
                console.log(hola2);
 
                 const asd = async function (){
@@ -124,10 +242,18 @@ module.exports = {
               });
 
 
-        } else if (req.body.select == "url"){
+        
+        
+        
+        
+        
+        
+        
+        
+            } else if (req.body.type == "url"){
 
         
-        } else if (req.body.select == "domain"){
+        } else if (req.body.select == "type"){
                 //'wikionemore.com'
             const theSameObject = defaultTimedInstance.domainCommentLookup(ioc, function(err, value){
                 if (err) {
@@ -152,7 +278,7 @@ module.exports = {
                
               });
 
-        }else if (req.body.select == "hash"){
+        }else if (req.body.type == "hash"){
             //08a542fe7f8450d2c66b5e428872860d584bc5be714a50293a10aef415310fe8
 
         }
@@ -162,6 +288,12 @@ module.exports = {
         
     
     },
+ 
+    
+}
+
+
+/*
     ch3ck: function(dato, type) {
         console.log(dato)
         let ioc = dato;
@@ -230,37 +362,4 @@ module.exports = {
         }
 
 
-    },
-    save2: function (req, res) {
-        console.log(req.body.ioc);
-        let cuatro = this.ch3ck();
-        //let hola = ch3ck(req.body.ioc, req.body.select);
-        return hola;
-        //let ioc = this.ch3ck(req.body.ioc, req.body.select);
-        //console.log(ioc);
-        /*
-        try {
-            await db.InvestigationDetail.create({
-                id_investigation: 1,
-                description: req.body.description,
-                ioc: ioc.ioc,
-                result: ioc.result
-
-            });
-            return res.render("Analysis", {});//aca van los iocs para una investigación
-            
-        } catch (error) {
-            console.log(error);
-            
-        }
-        */
-    }
-}
-
-// {message: 'SALIO TODO BIEN', result: res}
-            //console.log(JSON.stringify(res));
-            //let datos = JSON.stringify(value);
-            //res.send({message: 'SALIO TODO BIEN', result:datos});
-
-
-//module.exports = analysisController;
+    }, */

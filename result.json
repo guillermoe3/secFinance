@@ -1,0 +1,172 @@
+{
+  attributes: {
+    regional_internet_registry: 'RIPE NCC',
+    network: '193.169.212.0/24',
+    last_https_certificate_date: 1597871037,
+    tags: [],
+    country: 'LT',
+    as_owner: 'Venito Reklama, UAB',
+    last_analysis_stats: {
+      harmless: 88,
+      malicious: 1,
+      suspicious: 0,
+      undetected: 0,
+      timeout: 0
+    },
+    asn: 213322,
+    whois_date: 1597871037,
+    last_analysis_results: {
+      'CMC Threat Intelligence': [Object],
+      'Snort IP sample list': [Object],
+      '0xSI_f33d': [Object],
+      Armis: [Object],
+      ViriBack: [Object],
+      'Comodo Valkyrie Verdict': [Object],
+      PhishLabs: [Object],
+      K7AntiVirus: [Object],
+      'CINS Army': [Object],
+      Quttera: [Object],
+      OpenPhish: [Object],
+      'VX Vault': [Object],
+      'Web Security Guard': [Object],
+      Scantitan: [Object],
+      AlienVault: [Object],
+      Sophos: [Object],
+      Phishtank: [Object],
+      EonScope: [Object],
+      CyberCrime: [Object],
+      Spam404: [Object],
+      SecureBrain: [Object],
+      'Hoplite Industries': [Object],
+      AutoShun: [Object],
+      Fortinet: [Object],
+      'alphaMountain.ai': [Object],
+      Lionic: [Object],
+      'Virusdie External Site Scan': [Object],
+      'Google Safebrowsing': [Object],
+      SafeToOpen: [Object],
+      ADMINUSLabs: [Object],
+      Cyan: [Object],
+      'Heimdal Security': [Object],
+      CRDF: [Object],
+      Trustwave: [Object],
+      'AICC (MONITORAPP)': [Object],
+      CyRadar: [Object],
+      'Dr.Web': [Object],
+      Emsisoft: [Object],
+      Abusix: [Object],
+      Webroot: [Object],
+      Avira: [Object],
+      securolytics: [Object],
+      'Antiy-AVL': [Object],
+      Acronis: [Object],
+      'Quick Heal': [Object],
+      'ESTsecurity-Threat Inside': [Object],
+      DNS8: [Object],
+      'benkow.cc': [Object],
+      EmergingThreats: [Object],
+      'Chong Lua Dao': [Object],
+      'Yandex Safebrowsing': [Object],
+      MalwareDomainList: [Object],
+      Lumu: [Object],
+      zvelo: [Object],
+      Kaspersky: [Object],
+      Segasec: [Object],
+      'Sucuri SiteCheck': [Object],
+      'desenmascara.me': [Object],
+      URLhaus: [Object],
+      PREBYTES: [Object],
+      StopForumSpam: [Object],
+      Blueliv: [Object],
+      Netcraft: [Object],
+      ZeroCERT: [Object],
+      'Phishing Database': [Object],
+      MalwarePatrol: [Object],
+      MalBeacon: [Object],
+      IPsum: [Object],
+      Spamhaus: [Object],
+      Malwared: [Object],
+      BitDefender: [Object],
+      GreenSnow: [Object],
+      'G-Data': [Object],
+      StopBadware: [Object],
+      'SCUMWARE.org': [Object],
+      'malwares.com URL checker': [Object],
+      NotMining: [Object],
+      'Forcepoint ThreatSeeker': [Object],
+      Certego: [Object],
+      ESET: [Object],
+      Threatsourcing: [Object],
+      MalSilo: [Object],
+      Nucleon: [Object],
+      'BADWARE.INFO': [Object],
+      ThreatHive: [Object],
+      FraudScore: [Object],
+      Tencent: [Object],
+      'Bfore.Ai PreCrime': [Object],
+      'Baidu-International': [Object]
+    },
+    reputation: 0,
+    last_modification_date: 1639479952,
+    total_votes: { harmless: 0, malicious: 0 },
+    last_https_certificate: {
+      public_key: [Object],
+      thumbprint_sha256: 'e8c16f9212d3011e421b50cb1510e2c8e7f3f69298b3341086bc04a2b758cab4',
+      tags: [],
+      signature_algorithm: 'sha256RSA',
+      subject: [Object],
+      validity: [Object],
+      version: 'V3',
+      extensions: [Object],
+      cert_signature: [Object],
+      serial_number: '30231f05a5f7ddb7e803c72f384cd7ee2b7',
+      thumbprint: '321e07c08dcde2bcb75b27ec6baaa515aaaca784',
+      issuer: [Object],
+      size: 1380
+    },
+    continent: 'EU',
+    whois: 'NetRange: 193.0.0.0 - 193.255.255.255\n' +
+      'CIDR: 193.0.0.0/8\n' +
+      'NetName: RIPE-CBLK\n' +
+      'NetHandle: NET-193-0-0-0-1\n' +
+      'Parent: ()\n' +
+      'NetType: Allocated to RIPE NCC\n' +
+      'OriginAS: \n' +
+      'Organization: RIPE Network Coordination Centre (RIPE)\n' +
+      'RegDate: 1992-08-12\n' +
+      'Updated: 2009-03-25\n' +
+      'Comment: These addresses have been further assigned to users in\n' +
+      'Comment: the RIPE NCC region. Contact information can be found in\n' +
+      'Comment: the RIPE database at http://www.ripe.net/whois\n' +
+      'Ref: https://rdap.arin.net/registry//ip/193.0.0.0\n' +
+      'ResourceLink: https://apps.db.ripe.net/search/query.html\n' +
+      'ResourceLink: whois.ripe.net\n' +
+      'OrgName: RIPE Network Coordination Centre\n' +
+      'OrgId: RIPE\n' +
+      'Address: P.O. Box 10096\n' +
+      'City: Amsterdam\n' +
+      'StateProv: \n' +
+      'PostalCode: 1001EB\n' +
+      'Country: NL\n' +
+      'RegDate: \n' +
+      'Updated: 2013-07-29\n' +
+      'Ref: https://rdap.arin.net/registry//entity/RIPE\n' +
+      'ReferralServer: whois://whois.ripe.net\n' +
+      'ResourceLink: https://apps.db.ripe.net/search/query.html\n' +
+      'OrgTechHandle: RNO29-ARIN\n' +
+      'OrgTechName: RIPE NCC Operations\n' +
+      'OrgTechPhone: +31 20 535 4444 \n' +
+      'OrgTechEmail: hostmaster@ripe.net\n' +
+      'OrgTechRef: https://rdap.arin.net/registry//entity/RNO29-ARIN\n' +
+      'OrgAbuseHandle: ABUSE3850-ARIN\n' +
+      'OrgAbuseName: Abuse Contact\n' +
+      'OrgAbusePhone: +31205354444 \n' +
+      'OrgAbuseEmail: abuse@ripe.net\n' +
+      'OrgAbuseRef: https://rdap.arin.net/registry//entity/ABUSE3850-ARIN\n'
+  },
+  type: 'ip_address',
+  id: '193.169.212.10',
+  links: {
+    self: 'https://www.virustotal.com/api/v3/ip_addresses/193.169.212.10'
+  }
+}
