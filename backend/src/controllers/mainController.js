@@ -1,7 +1,7 @@
-const mainModel = require('../models/mainModel')
+
 const nvt = require("node-virustotal");
 const defaultTimedInstance = nvt.makeAPI();
-const theSameKey = defaultTimedInstance.setKey('3154df46b6cd5db1c4d1d57137850102624f51b1cd47b999fb109754d6cc9c35');
+const theSameKey = defaultTimedInstance.setKey("x");
 
 
 let mainController = {

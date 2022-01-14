@@ -22,6 +22,10 @@ const main = require("./routes/main");
 app.use(main);
 
 //routes analysis
+const investigations = require("./routes/investigations");
+app.use(investigations);
+
+//routes analysis
 const analysis = require("./routes/analysis");
 app.use(analysis);
 

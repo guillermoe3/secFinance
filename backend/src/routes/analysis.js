@@ -2,14 +2,15 @@ const express = require('express');
 const router = express.Router();
 const analysisController = require("../controllers/analysisController");
 
-//router.get("/", mainController.index);
-router.get("/investigations", analysisController.investigations);
-router.get("/analysis", analysisController.analysis);
-//router.post("/analysis", analysisController.check);
-router.post("/analysis", analysisController.check2);
-router.post("/investigation", analysisController.create);
 
-//router.get("/all", analysisController.test)
+
+//router.get("/analysis", analysisController.analysis);
+router.post("/analysis", analysisController.check);
+router.get("/analysis", analysisController.getAll);
+router.get("/analysis/:id", analysisController.getAllbyInvestigation);
+router.put("/analysis/:id", analysisController.update);
+router.delete("/analysis/:id", analysisController.delete);
+
 
 
 module.exports = router;
