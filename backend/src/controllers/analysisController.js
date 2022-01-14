@@ -99,9 +99,6 @@ module.exports = {
                 //guardar datos en DB
                 let saveObject = utilsAnalysis.save(data);//JSON.stringify(
 
-
-                
-
                 res.send(data);
               });
             
@@ -115,8 +112,28 @@ module.exports = {
                   console.log(err);
                   return;
                 }
-                console.log(JSON.stringify(value));
-                res.send(value);
+               
+                let datos = JSON.parse(value);
+                let lastAnalysis = datos.data.attributes.last_analysis_stats;
+                let headers = datos.data.attributes.last_http_response_headers
+                let categories = datos.data.attributes.categories
+
+                let whois = {
+                    headers: headers,
+                    categories: categories
+                }
+
+                let data = {
+                    ioc: req.body.ioc,
+                    description: req.body.description,
+                    result: lastAnalysis,
+                    whois: whois,
+                    timestamp: Date.now()
+                }
+                 //guardar datos en DB
+                 let saveObject = utilsAnalysis.save(data);
+                
+                res.send(data);
               });
 
         }else if (req.body.type == "hash"){
@@ -130,9 +147,30 @@ module.exports = {
                   console.log(err);
                   return;
                 }
-                console.log(JSON.stringify(value));
                 
-                res.send(value);
+                let datos = JSON.parse(value);
+                let lastAnalysis = datos.data.attributes.last_analysis_stats;
+                let names = datos.data.attributes.names
+                let type_description = datos.data.attributes.type_description
+                let magic = datos.data.attributes.magic
+
+                let whois = {
+                    names: names,
+                    type_description: type_description, 
+                    magic: magic
+                }
+
+                let data = {
+                    ioc: req.body.ioc,
+                    description: req.body.description,
+                    result: lastAnalysis,
+                    whois: whois,
+                    timestamp: Date.now()
+                }
+                 //guardar datos en DB
+                let saveObject = utilsAnalysis.save(data);
+                
+                res.send(data);
               });
 
         }else if (req.body.type == "domain"){
@@ -143,8 +181,38 @@ module.exports = {
                   console.log(err);
                   return;
                 }
-                console.log(JSON.stringify(value));
-                res.send(value);
+
+                let datos = JSON.parse(value);
+                let lastAnalysis = datos.data.attributes.last_analysis_stats;
+                let registrar = datos.data.attributes.registrar;
+                let categories = datos.data.attributes.categories
+               
+            
+                let whois = {
+                    registrar: registrar,
+                    categories: categories, 
+                    
+                }
+
+                let data = {
+                    ioc: req.body.ioc,
+                    description: req.body.description,
+                    result: lastAnalysis,
+                    whois: whois,
+                    timestamp: Date.now()
+                }
+                 //guardar datos en DB
+                let saveObject = utilsAnalysis.save(data);
+                
+                res.send(data);
+
+
+
+
+
+
+
+
               });
             
             
