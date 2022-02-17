@@ -17,8 +17,8 @@ module.exports = {
             id_user: 1, 
             closed: false, 
             description: req.body.description,
-            likes: "ninguno",
-            dislikes: "ninguno",
+            likes: "",
+            dislikes: "",
             date_creation: Date.now(),
             isPublic: req.body.ispublic ? true : false, 
             isShared: true, 
@@ -35,6 +35,71 @@ module.exports = {
             console.log(error);
             
         }
+    }, 
+
+    getAll: async function (req, res) {
+        try {
+            let investigation = await db.Investigation.findAll({raw: true});
+            res.send(JSON.stringify(investigation));
+            
+        } catch (error) {
+            console.log(error);
+            
+        }
+
+    }, 
+    getById: async function (req, res) {
+        try {
+            let investigation = await db.Investigation.findAll({
+                where: {
+                    id_investigation: req.params.id
+                },
+                raw: true});
+            res.send(JSON.stringify(investigation));
+            
+        } catch (error) {
+            console.log(error);
+            
+        }
+
+    }, 
+    update: async function (req, res) {
+
+        let updated  = await db.Investigation.update({
+            closed: req.body.closed, 
+            description: req.body.description,
+            isPublic: req.body.ispublic,
+            isShared: req.body.isShared, 
+            title: req.body.title,
+            validated: req.body.validated
+
+        },{
+            where: {id_investigation: req.params.id}
+        })
+
+       console.log(updated);
+       res.send(updated);
+
+    }, 
+
+    delete: async function (req, res) {
+
+
+        try {
+            let deleted = await db.InvestigationDetail.destroy({
+                where: {id_investigationDetail: req.params.id}
+            });
+            console.log(deleted);
+            if (deleted != 0){
+                res.sendStatus(200);
+            } else res.sendStatus(500);
+            
+        } catch (error) {
+            console.log(error);
+        }
+
+
+
     }
   
 }
