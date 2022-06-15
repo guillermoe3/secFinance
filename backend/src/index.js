@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const path = require('path');
 const cors = require('cors');
+const dotenv = require("dotenv")
 
 //server init
 app.set("port", process.env.PORT || 3004);
@@ -12,6 +13,10 @@ app.use(express.static(path.resolve(__dirname, "../public")));
 
 //CORS
 app.use(cors());
+
+//dotenv
+
+dotenv.config();
 
 
 //uso JSON
@@ -37,3 +42,7 @@ app.use(analysis);
 //routes alerts
 const alerts= require("./routes/alerts");
 app.use(alerts);
+
+//routes users
+const users= require("./routes/users");
+app.use(users);
