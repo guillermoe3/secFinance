@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const path = require('path');
+const cors = require('cors');
 
 //server init
 app.set("port", process.env.PORT || 3004);
@@ -8,6 +9,10 @@ app.listen(app.get("port"), () => console.log("Server start http://localhost:"+a
 
 //app access public
 app.use(express.static(path.resolve(__dirname, "../public")));
+
+//CORS
+app.use(cors());
+
 
 //uso JSON
 app.use(express.urlencoded({extended: false}));
