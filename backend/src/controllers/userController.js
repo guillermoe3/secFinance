@@ -45,13 +45,14 @@ let userController = {
     register: async function (req, res) {
         console.log(req.body);
         
-        const { name, email, password, confPassword } = req.body;
+        const { name, lastname, email, password, confPassword } = req.body;
         if(password !== confPassword) return res.status(400).json({msg: "Password and Confirm Password do not match"});
         const salt = await bcrypt.genSalt();
         const hashPassword = await bcrypt.hash(password, salt);
         try {
             await db.Users.create({
                 name: name,
+                lastname: lastname,
                 email: email,
                 password: hashPassword
             });

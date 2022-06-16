@@ -1,34 +1,29 @@
 module.exports = (sequelize, DataTypes) => {
 
-const Users = sequelize.define('Users',{
-    id_usuario:{
+const Bitacora = sequelize.define('Bitacora',{
+    id:{
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true
     },
-    name:{
+    date:{
+        type: DataTypes.DATE
+    },
+    severity:{
         type: DataTypes.STRING
     },
-    lastname:{
+    event:{
         type: DataTypes.STRING
     },
-    email:{
+    userEmail:{
         type: DataTypes.STRING
-    },
-    password:{
-        type: DataTypes.STRING
-    },
-    role:{
-        type: DataTypes.STRING
-    },
-    refresh_token:{
-        type: DataTypes.TEXT
     }
+
 },{
-    tableName: "users",
+    tableName: "bitacora",
     timestamps: false,
     //freezeTableName:true
 });
  
-    return Users;
+    return Bitacora;
 }

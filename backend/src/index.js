@@ -46,3 +46,7 @@ app.use(alerts);
 //routes users
 const users= require("./routes/users");
 app.use(users);
+
+//routes users
+const bitacora= require("./routes/bitacora");
+app.use(bitacora);
