@@ -23,7 +23,6 @@ module.exports = {
         //req.body recibo el type, ioc, y notes. 
         let ioc = req.body.ioc;
         if(req.body.type == "ip"){
-
             
             const theSameObject = defaultTimedInstance.ipLookup(ioc, function(err, value){
                 if (err) {
@@ -57,6 +56,7 @@ module.exports = {
                 }
                 //Armo json para devolver al front y guardar en DB.
                 let data = {
+                    id_investigador : req.body.id_investigador,
                     ioc: req.body.ioc,
                     description: req.body.description,
                     result: lastAnalysis,
@@ -73,7 +73,9 @@ module.exports = {
 
         }else if (req.body.type == "url"){
             //const hashed = nvt.sha256('http://wikionemore.com/');
+            console.log("este es el ioc" + ioc)
             const hashed = nvt.sha256(ioc);
+            console.log("este es el ioc hashed" + hashed)
             const theSameObject = defaultTimedInstance.urlLookup(hashed, function(err, value){
                 if (err) {
                   console.log('Well, crap.');
@@ -190,6 +192,7 @@ module.exports = {
 
     },
     getAllbyInvestigation: async function (req, res) {
+        console.log(req.params)
 
         try {
             let analysis = await db.InvestigationDetail.findAll({
@@ -197,6 +200,7 @@ module.exports = {
                     id_investigation: req.params.id
                 },
                 raw: true});
+            console.log(analysis)
             res.send(JSON.stringify(analysis));
             
         } catch (error) {
@@ -237,6 +241,17 @@ module.exports = {
         }
 
 
+    }, 
+    getRelatedObjects: async function(req, res){
+
+        try {
+            return true;
+            
+        } catch (error) {
+            return false;
+            
+        }
+        
     }
     
     

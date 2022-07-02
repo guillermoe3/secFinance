@@ -10,11 +10,12 @@ module.exports = {
     create: async function (req, res) {
         //let checked = req.body.ispublic;
         console.log(req.body)
+        console.log("está en create")
         
         try {
         const objCreate = await db.Investigation.create({
-            id_analyst: 1,
-            id_user: 1, 
+            id_analyst: 0,
+            id_user: req.body.id_user, 
             closed: false, 
             description: req.body.description,
             likes: "",
@@ -53,6 +54,21 @@ module.exports = {
             let investigation = await db.Investigation.findAll({
                 where: {
                     id_investigation: req.params.id
+                },
+                raw: true});
+            res.send(JSON.stringify(investigation));
+            
+        } catch (error) {
+            console.log(error);
+            
+        }
+
+    }, 
+    getByUserId: async function (req, res) {
+        try {
+            let investigation = await db.Investigation.findAll({
+                where: {
+                    id_user: req.params.user
                 },
                 raw: true});
             res.send(JSON.stringify(investigation));

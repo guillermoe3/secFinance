@@ -12,7 +12,7 @@ module.exports = {
            // ioc = JSON.parse(ioc);
             console.log("ESTO ES IOC:" +ioc.ioc);
            let obj =  await db.InvestigationDetail.create({
-                id_investigation: 1,
+                id_investigador: ioc.id_investigador,
                 description: ioc.description,
                 ioc: ioc.ioc,
                 result: JSON.stringify(ioc.result),
