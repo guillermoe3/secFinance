@@ -209,9 +209,6 @@ module.exports = {
         }
 
     },
-    getById: function(req, res) {
-
-    },
     update: async function(req, res) {
                 
         let updated  = await db.InvestigationDetail.update({
@@ -245,10 +242,64 @@ module.exports = {
     getRelatedObjects: async function(req, res){
 
         try {
-            return true;
+
+            let objs = await db.InvestigationDetail.findAll({
+                where: {
+                    ioc: req.body.ioc
+                }
+            })
+
+            let invs = [];
+            let analysis = [];
+            let result = [];
+
+            if (objs !== null){
+                
+                console.log("Objeto encontrado!sssssssssssssssssss sssssssssssssssssss sssssssssssssssssss sssssssssssssssssss sssssssssssssssssss")
+                console.log(objs[0].ioc)
+               let ioc = objs[0].ioc;
+               console.log(ioc)
+                
+                //console.log(objs.length)
+
+                 invs =  utilsAnalysis.getIdFromObjects(objs);
+                 console.log("esto es invssssssssssssssssssssss")
+                 console.log(invs)
+
+                
+                 
+                 for (i=0; i < invs.length;i++){
+                     analysis.push(await utilsAnalysis.getAnalysisByInvestigationId(invs[i] ));
+                 }
+
+                 let result = await utilsAnalysis.getTop3Analysis(analysis);
+                 //console.log(result)
+
+                 //JSON.stringify(result)
+
+                 for (j=o;j < result.length; j++){
+                     console.log("esto es result "+ j)
+                     console.log(result[j])
+                 }
+
+                 let filtrado = result.map( (dato) => {
+
+                    
+
+                 })
+                 res.send(result)
+
+            }else 
+            {
+                console.log("el ioc no existe")
+                res.send(false);
+
+            }
+
             
+   
         } catch (error) {
-            return false;
+            res.send(false);
             
         }
         

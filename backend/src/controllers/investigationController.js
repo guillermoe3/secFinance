@@ -81,20 +81,32 @@ module.exports = {
     }, 
     update: async function (req, res) {
 
-        let updated  = await db.Investigation.update({
-            closed: req.body.closed, 
-            description: req.body.description,
-            isPublic: req.body.ispublic,
-            isShared: req.body.isShared, 
-            title: req.body.title,
-            validated: req.body.validated
+        console.log(req.body)
 
-        },{
-            where: {id_investigation: req.params.id}
-        })
+        try {
 
-       console.log(updated);
-       res.send(updated);
+            let updated  = await db.Investigation.update({
+                closed: req.body.closed, 
+                description: req.body.description,
+                isPublic: req.body.ispublic,
+                isShared: req.body.isShared, 
+                title: req.body.title,
+                validated: req.body.validated
+    
+            },{
+                where: {id_investigation: req.params.id}
+            })
+    
+           console.log(updated);
+           res.send("ok");
+            
+        } catch (error) {
+
+            console.log("error")
+            
+        }
+
+
 
     }, 
 
@@ -113,9 +125,32 @@ module.exports = {
         } catch (error) {
             console.log(error);
         }
+    }, 
+
+    isClosed : async function (req, res){
+
+        try {
+
+            let investigation = await db.Investigation.findAll({
+                where: {
+                    id_investigation: req.params.id
+                },
+                raw: true});
+
+            if(investigation[0].closed == 1){
+                res.send(true);
+            } else res.send(false);
+
+        
+        } catch (error) {
+
+            console.log(error)
+            
+        }
+
+    }, 
 
 
-
-    }
+    
   
 }
