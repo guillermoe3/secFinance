@@ -243,6 +243,9 @@ module.exports = {
 
         try {
 
+            let description = req.body.description;
+            let type = req.body.type;
+
             let objs = await db.InvestigationDetail.findAll({
                 where: {
                     ioc: req.body.ioc
@@ -251,48 +254,47 @@ module.exports = {
 
             let invs = [];
             let analysis = [];
-            let result = [];
 
-            if (objs !== null){
+            if (objs.length > 0){
                 
-                console.log("Objeto encontrado!sssssssssssssssssss sssssssssssssssssss sssssssssssssssssss sssssssssssssssssss sssssssssssssssssss")
-                console.log(objs[0].ioc)
+                console.log("Objeto encontrado!")
                let ioc = objs[0].ioc;
-               console.log(ioc)
-                
                 //console.log(objs.length)
-
                  invs =  utilsAnalysis.getIdFromObjects(objs);
-                 console.log("esto es invssssssssssssssssssssss")
-                 console.log(invs)
+                 //console.log(invs)
 
-                
-                 
                  for (i=0; i < invs.length;i++){
                      analysis.push(await utilsAnalysis.getAnalysisByInvestigationId(invs[i] ));
                  }
 
                  let result = await utilsAnalysis.getTop3Analysis(analysis);
-                 //console.log(result)
-
-                 //JSON.stringify(result)
-
-                 for (j=o;j < result.length; j++){
-                     console.log("esto es result "+ j)
-                     console.log(result[j])
-                 }
-
-                 let filtrado = result.map( (dato) => {
-
-                    
-
-                 })
-                 res.send(result)
-
-            }else 
+                 let filtrado = result.filter( dato => dato.ioc !== ioc)
+                 //console.log(filtrado)
+                 res.send(filtrado)
+            } else 
             {
                 console.log("el ioc no existe")
-                res.send(false);
+                console.log(objs)
+
+
+                //filtrar x tipo y dsp por los analysis malicious >0
+                //si es ip buscar por rango
+                //si es url buscar dominio o donde está hosteado
+                //si es malware buscar por palabra clave
+
+                if (type == "ip"){
+                    console.log("Es una ip")
+
+                    
+                } else if (type == "url"){
+                    console.log("Es una url")
+                } else if (type == "hash"){
+                    console.log("Es un hash")
+                }
+
+
+
+                res.send("objeto no existe");
 
             }
 

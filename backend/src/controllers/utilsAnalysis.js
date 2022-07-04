@@ -94,7 +94,7 @@ module.exports = {
 
         try {
 
-            console.log("entro a getTop3Analysis")
+            //console.log("entro a getTop3Analysis")
             //console.log(analysis)
     
             let list = [];
@@ -111,6 +111,8 @@ module.exports = {
     
               
             }
+
+            //console.log(analysisMalicious)
     
             const randomElement1 = analysisMalicious[Math.floor(Math.random() * analysisMalicious.length)];
             const randomElement2 = analysisMalicious[Math.floor(Math.random() * analysisMalicious.length)];
