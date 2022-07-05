@@ -19,7 +19,8 @@ module.exports = {
                 ioc: ioc.ioc,
                 result: JSON.stringify(ioc.result),
                 whois: JSON.stringify(ioc.whois),
-                timestamp: ioc.timestamp
+                timestamp: ioc.timestamp,
+                type: ioc.type
 
             });
             console.log("El Objeto guardado es:"+obj)
@@ -130,6 +131,82 @@ module.exports = {
         }
 
     },
+
+    getParcialIp: function(ip){
+       let array = ip.split(".")
+
+       let partialArray = [];
+       partialArray.push(array[0], array[1])
+
+       //console.log(partialArray)
+       return(partialArray);
+    }, 
+
+    getIocByTypeAndMalicious: async function(type){
+
+        let iocs = await db.InvestigationDetail.findAll({
+            where: {
+                type: type,
+            },
+            raw: true});
+
+            let iocsMalicious = [];
+    
+            //filtro malicious > 0
+    
+            for (i=0; i < iocs.length;i++){
+    
+                let temp = JSON.parse(iocs[i].result);
+
+                if (temp.malicious > 0){
+                    iocsMalicious.push(iocs[i]);
+                }
+    
+              
+            }
+
+            
+            //console.log(iocs.length)
+           // console.log(iocsMalicious.length)
+
+            return(iocsMalicious);
+
+    },
+    getIpsWithSameRange: function (partial, iocs){
+        
+        let result = [];
+
+        try {
+
+            for(i=0;i<iocs.length;i++){
+
+               //console.log(iocs[i].ioc)
+
+                //console.log(this.getParcialIp(iocs[i].ioc));
+                if (JSON.stringify(this.getParcialIp(iocs[i].ioc)) === JSON.stringify(partial)){
+                   // console.log("es igual")
+                    result.push(iocs[i].ioc)
+                }
+                //si este parcial es igual al partial del parametro, guardar en un nuevo array.
+    
+            }
+
+            //remuevo repetidos
+
+            let resultSinRepetidos = result.filter((item,index)=>{
+                return result.indexOf(item) === index;
+              })
+
+            return resultSinRepetidos;
+            
+        } catch (error) {
+            console.log(error)
+            
+        }
+
+
+        
+    }
 
 
 }

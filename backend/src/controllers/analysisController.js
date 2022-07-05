@@ -61,7 +61,8 @@ module.exports = {
                     description: req.body.description,
                     result: lastAnalysis,
                     whois: whois,
-                    timestamp: Date.now()
+                    timestamp: Date.now(),
+                    type: "ip",
                 }
 
                 //guardar datos en DB
@@ -98,6 +99,7 @@ module.exports = {
                     description: req.body.description,
                     result: lastAnalysis,
                     whois: whois,
+                    type: "url",
                     timestamp: Date.now()
                 }
                  //guardar datos en DB
@@ -135,6 +137,7 @@ module.exports = {
                     description: req.body.description,
                     result: lastAnalysis,
                     whois: whois,
+                    type: "hash",
                     timestamp: Date.now()
                 }
                  //guardar datos en DB
@@ -169,6 +172,7 @@ module.exports = {
                     description: req.body.description,
                     result: lastAnalysis,
                     whois: whois,
+                    type: "domain",
                     timestamp: Date.now()
                 }
                  //guardar datos en DB
@@ -245,6 +249,7 @@ module.exports = {
 
             let description = req.body.description;
             let type = req.body.type;
+            let ioc = req.body.ioc;
 
             let objs = await db.InvestigationDetail.findAll({
                 where: {
@@ -284,8 +289,29 @@ module.exports = {
 
                 if (type == "ip"){
                     console.log("Es una ip")
+                    console.log(ioc)
 
-                    
+                    //obtengo parcial del ioc
+                    let partialIoc = [];
+                    partialIoc = await utilsAnalysis.getParcialIp(ioc);
+                    console.log(partialIoc)
+
+                    //obtengo los ioc ip maliciosos
+
+                    let maliciousIocs = [];
+
+                    maliciousIocs = await utilsAnalysis.getIocByTypeAndMalicious("ip");
+
+                    //console.log(maliciousIocs.length)
+
+                    //obtengo los partial de esas ioc y comparo con el ioc
+                    let results = [];
+
+                    results = utilsAnalysis.getIpsWithSameRange(partialIoc, maliciousIocs);
+
+                    res.send(results)
+                    //console.log(results)
+
                 } else if (type == "url"){
                     console.log("Es una url")
                 } else if (type == "hash"){
