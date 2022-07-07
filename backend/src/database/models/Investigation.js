@@ -36,6 +36,9 @@ module.exports = (sequelize, DataTypes) => {
         },
         validated: {
             type: DataTypes.BOOLEAN,  
+        },
+        review: {
+            type: DataTypes.INTEGER,  
         }
 
     }, {

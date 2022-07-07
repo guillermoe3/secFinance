@@ -10,5 +10,9 @@ router.post("/investigation", analysisController.create);
 router.post("/investigation/:id/update", analysisController.update);
 router.get("/investigation/:id/closed", analysisController.isClosed)
 
+router.get("/investigation/:id/requested", analysisController.isRequested)
+
+router.get("/investigation/toreview", analysisController.toReview)
+
 
 module.exports = router;

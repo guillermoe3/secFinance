@@ -91,7 +91,8 @@ module.exports = {
                 isPublic: req.body.ispublic,
                 isShared: req.body.isShared, 
                 title: req.body.title,
-                validated: req.body.validated
+                validated: req.body.validated,
+                review : req.body.review
     
             },{
                 where: {id_investigation: req.params.id}
@@ -149,6 +150,42 @@ module.exports = {
         }
 
     }, 
+
+    isRequested : async function(req, res){
+      
+        try {
+            let investigation = await db.Investigation.findAll({
+                where: {
+                    id_investigation: req.params.id
+                },
+                raw: true});
+
+                if(investigation[0].review == "1"){
+                    res.send(true);
+                } else res.send(false);
+            
+        } catch (error) {
+            console.log(error)
+            
+        }
+    }, 
+    toReview : async function(req, res){
+        try {
+
+            let investigations = await db.Investigation.findAll({
+                where: {
+                    review: "1"
+                },
+                raw: true
+            })
+
+            res.send(investigations)
+            
+        } catch (error) {
+            
+            console.log(error)
+        }
+    }
 
 
     
