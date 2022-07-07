@@ -1,11 +1,12 @@
 //const mainModel = require('../models/mainModel')
 const db = require("../database/models")
 const analysisController = require("./analysisController")
+const utilsUrlsAnalysis = require("./utilsUrlsAnalysis")
 const { Op } = require("sequelize");
 
 
 
-//let analysisController = 
+
 module.exports = {
 
     save: async function(ioc){
@@ -206,6 +207,100 @@ module.exports = {
 
 
         
+    }, 
+    getCategoryFromUrl: function (description){
+
+        console.log("entro a getCategoryFromUrl")
+
+        descriptionArray = [];
+        let keywords = ["malware", "command and control", "botnets", "botnet", "compromised website", "encrypted", "keylogger", "malicious", "phishing",
+                            "spyware", "mobile", "hacking", "security", "facebook", "youtube", "exploits", "suspicious"]
+
+        descriptionArray = description.split(" ");
+
+        console.log(descriptionArray);
+        //console.log(keywords)
+
+        //buscar palabras
+
+        let matchedKeyboard = [];
+
+        for (i=0; i<descriptionArray.length;i++){
+            //console.log(descriptionArray[i])
+            for (j=0;j<keywords.length;j++){
+
+                if(descriptionArray[i] == keywords[j]){
+                    //console.log("Encontré una que se repite y es "+descriptionArray[i])
+                    matchedKeyboard.push(descriptionArray[i])
+                }
+
+            }
+        }
+
+        //console.log(matchedKeyboard)
+        return (matchedKeyboard);
+    }, 
+    maliciousIocsWithMatchedKeyword: function (maliciousIocsWithKeywords, matchedKeyword){
+        console.log("entro")
+
+        // for y preguntar si la categoria del ioc demaliciousIocsWithKeywords tiene algun matchedKeyword
+
+        //console.log(maliciousIocsWithKeywords)
+        //console.log(matchedKeyword)
+
+        let keywordInUrlIoc = [];
+        let hola = [];
+        console.log(maliciousIocsWithKeywords.length)
+
+        let temp = ""
+        for (i=0;i<maliciousIocsWithKeywords.length;i++){
+
+            temp = maliciousIocsWithKeywords[i][0];
+
+            keywordInUrlIoc = utilsUrlsAnalysis.getCategoryFromUrl(maliciousIocsWithKeywords[i][1]);
+
+            const found = matchedKeyword.some(r => 
+                keywordInUrlIoc.includes(r));
+   
+            console.log(temp)
+            console.log(keywordInUrlIoc)
+            console.log(found)
+
+            if (found){
+                console.log("entro al if")
+                hola.push(temp.toString())
+            }
+            
+            
+
+        }
+        console.log(hola)
+
+        return (hola);
+        //console.log(maliciousIocsWithKeywords[2])
+    },
+
+    getUrlsRelated: function (maliciousIocs, matchedKeyword){
+
+        let maliciousIocsWithKeywords =[];
+        let result = [];
+
+        let PATTERN = 'Forcepoint ThreatSeeker';
+        let filtrado = [];
+
+        console.log(maliciousIocs.length)
+
+        for (i=0;i<maliciousIocs.length;i++){
+           
+            let categoriesArray = Object.entries(JSON.parse(maliciousIocs[i].whois).categories)
+                    filtrado = categoriesArray.filter(function (str) { return str.includes(PATTERN); });
+                    if (filtrado.length >= 1){
+                        maliciousIocsWithKeywords.push([maliciousIocs[i].ioc, filtrado[0][1]])
+                    }
+                    
+        }
+        result = this.maliciousIocsWithMatchedKeyword(maliciousIocsWithKeywords, matchedKeyword)
+        return (result)
     }
 
 

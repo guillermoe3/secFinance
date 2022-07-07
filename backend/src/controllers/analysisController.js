@@ -7,7 +7,7 @@ const theSameKey = defaultTimedInstance.setKey(vt_api);
 const utilsAnalysis = require("./utilsAnalysis")
 
 
-//let analysisController = 
+
 module.exports = {
     index: function (req, res) {
         res.render("index");
@@ -314,6 +314,32 @@ module.exports = {
 
                 } else if (type == "url"){
                     console.log("Es una url")
+
+                    //filtro por todos los malicious >1
+
+                    maliciousIocs = await utilsAnalysis.getIocByTypeAndMalicious("url");
+                    //console.log(maliciousIocs)
+
+                    //obtengo palabra clave de la descripción (si hay muchas obtengo una aleatoria)
+
+                    //filtro obtengo categoria del ioc original
+
+                    let matchedKeyword = [];
+                    matchedKeyword = utilsAnalysis.getCategoryFromUrl(description);
+
+                    console.log("esto es matchedKeywordddddddd")
+                    console.log(matchedKeyword)
+
+                    //filtro las categorias del resto de los iocs filtrados y muestro sugerencias. 
+
+                     //results
+
+                     let result = [];
+                    
+                     result = utilsAnalysis.getUrlsRelated(maliciousIocs, matchedKeyword)
+
+                    res.send(result)
+
                 } else if (type == "hash"){
                     console.log("Es un hash")
                 }
