@@ -27,7 +27,7 @@ module.exports = {
             const theSameObject = defaultTimedInstance.ipLookup(ioc, function(err, value){
                 if (err) {
                   console.log('Well, crap.');
-                  console.log(err);
+                  //console.log(err);
                   return;
                 }
                
@@ -63,6 +63,7 @@ module.exports = {
                     whois: whois,
                     timestamp: Date.now(),
                     type: "ip",
+                    info: JSON.stringify(utilsAnalysis.getParcialIp(req.body.ioc))
                 }
 
                 //guardar datos en DB
@@ -75,6 +76,11 @@ module.exports = {
         }else if (req.body.type == "url"){
             //const hashed = nvt.sha256('http://wikionemore.com/');
             console.log("este es el ioc" + ioc)
+            console.log(ioc.slice(-1))
+            if (ioc.slice(-1) !== "/"){
+                ioc += "/"
+            }
+            console.log(ioc)
             const hashed = nvt.sha256(ioc);
             console.log("este es el ioc hashed" + hashed)
             const theSameObject = defaultTimedInstance.urlLookup(hashed, function(err, value){
@@ -100,6 +106,7 @@ module.exports = {
                     result: lastAnalysis,
                     whois: whois,
                     type: "url",
+                    info : JSON.stringify(utilsAnalysis.getCategoryFromUrl(req.body.description)),
                     timestamp: Date.now()
                 }
                  //guardar datos en DB
@@ -138,6 +145,7 @@ module.exports = {
                     result: lastAnalysis,
                     whois: whois,
                     type: "hash",
+                    info: type_description,
                     timestamp: Date.now()
                 }
                  //guardar datos en DB
@@ -173,6 +181,7 @@ module.exports = {
                     result: lastAnalysis,
                     whois: whois,
                     type: "domain",
+                    info : (utilsAnalysis.getCategoryFromUrl(req.body.description) ? JSON.stringify(utilsAnalysis.getCategoryFromUrl(req.body.description)) : ""),
                     timestamp: Date.now()
                 }
                  //guardar datos en DB
@@ -197,6 +206,7 @@ module.exports = {
     },
     getAllbyInvestigation: async function (req, res) {
         console.log(req.params)
+        console.log("entró en getAllbyInvestigation")
 
         try {
             let analysis = await db.InvestigationDetail.findAll({
@@ -265,6 +275,124 @@ module.exports = {
                 console.log("Objeto encontrado!")
                let ioc = objs[0].ioc;
                 //console.log(objs.length)
+                
+                 invs =  utilsAnalysis.getIdFromObjects(objs);
+                 console.log(invs)
+
+                 for (i=0; i < invs.length;i++){
+                     analysis.push(await utilsAnalysis.getAnalysisByInvestigationId(invs[i]));
+                 }
+
+                 let result = await utilsAnalysis.getTop3Analysis(analysis);
+                 let filtrado = result.filter( dato => dato.ioc !== ioc)
+                 //console.log(filtrado)
+                 res.send(filtrado)
+            } else 
+            {
+                console.log("el ioc no existe")
+               /* console.log(objs)
+
+
+                //filtrar x tipo y dsp por los analysis malicious >0
+                //si es ip buscar por rango
+                //si es url buscar dominio o donde está hosteado
+                //si es malware buscar por palabra clave
+
+                if (type == "ip"){
+                    console.log("Es una ip")
+                    console.log(ioc)
+
+                    //obtengo parcial del ioc
+                    let partialIoc = [];
+                    partialIoc = await utilsAnalysis.getParcialIp(ioc);
+                    console.log(partialIoc)
+
+                    //obtengo los ioc ip maliciosos
+
+                    let maliciousIocs = [];
+
+                    maliciousIocs = await utilsAnalysis.getIocByTypeAndMalicious("ip");
+
+                    //console.log(maliciousIocs.length)
+
+                    //obtengo los partial de esas ioc y comparo con el ioc
+                    let results = [];
+
+                    results = await utilsAnalysis.getIpsWithSameRange(partialIoc, maliciousIocs);
+
+                    res.send(results)
+                    //console.log(results)
+
+                } else if (type == "url"){
+                    console.log("Es una url")
+
+                    //filtro por todos los malicious >1
+
+                    maliciousIocs = await utilsAnalysis.getIocByTypeAndMalicious("url");
+                    //console.log(maliciousIocs)
+
+                    //obtengo palabra clave de la descripción (si hay muchas obtengo una aleatoria)
+
+                    //filtro obtengo categoria del ioc original
+
+                    let matchedKeyword = [];
+                    matchedKeyword = utilsAnalysis.getCategoryFromUrl(description);
+
+                    console.log("esto es matchedKeywordddddddd")
+                    console.log(matchedKeyword)
+
+                    //filtro las categorias del resto de los iocs filtrados y muestro sugerencias. 
+
+                     //results
+
+                     let result = [];
+                    
+                     result = utilsAnalysis.getUrlsRelated(maliciousIocs, matchedKeyword)
+
+                    res.send(result)
+
+                } else if (type == "hash"){
+                    console.log("Es un hash")
+                }
+
+
+
+                res.send("objeto no existe");
+*/
+            }
+
+            
+   
+        } catch (error) {
+            res.send(false);
+            
+        }
+        
+    }, 
+
+    getRelatedObjects2: async function(req, res){
+
+        try {
+
+            let description = req.body.description;
+            let type = req.body.type;
+            let ioc = req.body.ioc;
+
+            let objs = await db.InvestigationDetail.findAll({
+                where: {
+                    ioc: req.body.ioc
+                }
+            })
+
+            let invs = [];
+            let analysis = [];
+
+            if (objs.length > 0){
+                
+                console.log("Objeto encontrado!")
+               let ioc = objs[0].ioc;
+                //console.log(objs.length)
+                
                  invs =  utilsAnalysis.getIdFromObjects(objs);
                  //console.log(invs)
 
@@ -307,7 +435,7 @@ module.exports = {
                     //obtengo los partial de esas ioc y comparo con el ioc
                     let results = [];
 
-                    results = utilsAnalysis.getIpsWithSameRange(partialIoc, maliciousIocs);
+                    results = await utilsAnalysis.getIpsWithSameRange(partialIoc, maliciousIocs);
 
                     res.send(results)
                     //console.log(results)
@@ -357,6 +485,29 @@ module.exports = {
             
         }
         
+    }, 
+
+    isindb : async function(req, res){
+        try {
+            let analysis = await db.InvestigationDetail.findOne({
+                where: {
+                    ioc: req.body.ioc
+                },
+                raw: true});
+            res.send(JSON.stringify(analysis));
+            
+        } catch (error) {
+            console.log(error);
+            
+        }
+    }, 
+
+    getInfo : function(ioc, type){
+        //si es un url o dominio, get keywords
+
+        //si es ip getParcial
+
+        //si es hash ????
     }
     
     

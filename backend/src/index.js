@@ -31,7 +31,7 @@ app.set("views", path.resolve(__dirname, "./views"))
 const main = require("./routes/main");
 app.use(main);
 
-//routes analysis
+//routes investigations
 const investigations = require("./routes/investigations");
 app.use(investigations);
 
@@ -47,6 +47,11 @@ app.use(alerts);
 const users= require("./routes/users");
 app.use(users);
 
-//routes users
+//routes bitacora
 const bitacora= require("./routes/bitacora");
 app.use(bitacora);
+
+
+//routes business
+const business= require("./routes/business");
+app.use(business);

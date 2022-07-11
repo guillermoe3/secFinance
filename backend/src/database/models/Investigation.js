@@ -39,7 +39,10 @@ module.exports = (sequelize, DataTypes) => {
         },
         review: {
             type: DataTypes.INTEGER,  
-        }
+        },
+        comments: {
+            type: DataTypes.STRING,
+        },
 
     }, {
         tableName: "investigations",

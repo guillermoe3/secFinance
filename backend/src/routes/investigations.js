@@ -14,5 +14,7 @@ router.get("/investigation/:id/requested", analysisController.isRequested)
 
 router.get("/investigation/toreview", analysisController.toReview)
 
+router.get("/investigation/:id/commented", analysisController.isCommented)
+
 
 module.exports = router;

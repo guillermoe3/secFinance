@@ -8,6 +8,8 @@ const analysisController = require("../controllers/analysisController");
 router.post("/analysis", analysisController.check);//send ioc to analyze
 router.post("/analysis/related", analysisController.getRelatedObjects)
 
+router.post("/analysis/isindb", analysisController.isindb)
+
 router.get("/analysis", analysisController.getAll);
 router.get("/analysis/:id", analysisController.getAllbyInvestigation);
 router.put("/analysis/:id", analysisController.update);

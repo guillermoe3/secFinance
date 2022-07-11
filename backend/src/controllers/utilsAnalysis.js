@@ -10,9 +10,11 @@ const { Op } = require("sequelize");
 module.exports = {
 
     save: async function(ioc){
+        console.log(ioc)
         try {
             
-           // ioc = JSON.parse(ioc);
+            //parse -> Con IP falla
+           //ioc = JSON.parse(ioc);
             console.log("ESTO ES IOC:" +ioc.ioc);
            let obj =  await db.InvestigationDetail.create({
                 id_investigador: ioc.id_investigador,
@@ -21,7 +23,8 @@ module.exports = {
                 result: JSON.stringify(ioc.result),
                 whois: JSON.stringify(ioc.whois),
                 timestamp: ioc.timestamp,
-                type: ioc.type
+                type: ioc.type, 
+                info: ioc.info,
 
             });
             console.log("El Objeto guardado es:"+obj)
@@ -173,19 +176,23 @@ module.exports = {
             return(iocsMalicious);
 
     },
-    getIpsWithSameRange: function (partial, iocs){
+    getIpsWithSameRange: async function (partial, iocs){
         
         let result = [];
+        console.log("zzzzzzzzzzzzzz")
+        console.log(partial)
 
         try {
 
             for(i=0;i<iocs.length;i++){
 
-               //console.log(iocs[i].ioc)
+               console.log(iocs[i].ioc)
 
-                //console.log(this.getParcialIp(iocs[i].ioc));
-                if (JSON.stringify(this.getParcialIp(iocs[i].ioc)) === JSON.stringify(partial)){
-                   // console.log("es igual")
+                console.log(await this.getParcialIp(iocs[i].ioc));
+                let temp = JSON.stringify(await this.getParcialIp(iocs[i].ioc))
+                
+                if ( temp === JSON.stringify(partial)){
+                   console.log(i)
                     result.push(iocs[i].ioc)
                 }
                 //si este parcial es igual al partial del parametro, guardar en un nuevo array.
@@ -206,6 +213,7 @@ module.exports = {
         }
 
 
+
         
     }, 
     getCategoryFromUrl: function (description){
@@ -220,6 +228,7 @@ module.exports = {
 
         console.log(descriptionArray);
         //console.log(keywords)
+
 
         //buscar palabras
 

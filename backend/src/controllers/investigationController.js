@@ -1,4 +1,5 @@
 const dotEnv = require("dotenv").config();
+const { response } = require("express");
 const db = require("../database/models"); 
 
 
@@ -24,7 +25,8 @@ module.exports = {
             isPublic: req.body.ispublic ? true : false, 
             isShared: true, 
             title: req.body.title,
-            validated: false
+            validated: false, 
+            comments : ""
             
             });
         //console.log(db.Investigation.id_investigation); 
@@ -64,6 +66,7 @@ module.exports = {
         }
 
     }, 
+    
     getByUserId: async function (req, res) {
         try {
             let investigation = await db.Investigation.findAll({
@@ -81,18 +84,20 @@ module.exports = {
     }, 
     update: async function (req, res) {
 
-        console.log(req.body)
+        //console.log(req.body)
 
         try {
 
             let updated  = await db.Investigation.update({
                 closed: req.body.closed, 
+                id_analyst: req.body.id_analyst, 
                 description: req.body.description,
                 isPublic: req.body.ispublic,
                 isShared: req.body.isShared, 
                 title: req.body.title,
                 validated: req.body.validated,
-                review : req.body.review
+                review : req.body.review, 
+                comments : req.body.comments
     
             },{
                 where: {id_investigation: req.params.id}
@@ -185,7 +190,34 @@ module.exports = {
             
             console.log(error)
         }
+    }, 
+
+    isCommented: async function (req, res){
+        try {
+
+            let comment = await db.Investigation.findAll({
+                where: {
+                    id_investigation: req.params.id
+                },
+                raw: true});
+
+                if (comment[0].comments != ""){
+                    //console.log(comment[0].comments)
+                    let commentObj = {
+                        comment: comment[0].comments,
+                    }
+                    console.log(commentObj)
+
+                    res.send(JSON.stringify(commentObj))
+                } else res.send("")
+            
+        } catch (error) {
+
+            console.log(error)
+            
+        }
     }
+    
 
 
     
