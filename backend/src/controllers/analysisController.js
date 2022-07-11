@@ -19,6 +19,8 @@ module.exports = {
     check: function (req, res) {
 
         console.log(req.body)
+        try {
+    
 
         //req.body recibo el type, ioc, y notes. 
         let ioc = req.body.ioc;
@@ -191,6 +193,14 @@ module.exports = {
 
               });
         }
+    
+        } 
+        catch (error) {
+            console.log(error)
+            
+        }
+    
+    
     }, 
     getAll: async function(req, res) {
 
@@ -488,13 +498,25 @@ module.exports = {
     }, 
 
     isindb : async function(req, res){
+        console.log('entro en isindb')
         try {
             let analysis = await db.InvestigationDetail.findOne({
                 where: {
                     ioc: req.body.ioc
                 },
                 raw: true});
-            res.send(JSON.stringify(analysis));
+            
+            console.log(analysis)
+
+            if (analysis){
+                let parsed = {
+                    id_investigationDetail: analysis.id_investigationDetail,
+                    id_investigation: analysis.id_investigationDetail,
+                    result: JSON.parse(analysis.result)
+                }
+                res.send(parsed);
+
+            } else res.send("400")
             
         } catch (error) {
             console.log(error);
