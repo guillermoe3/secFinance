@@ -24,21 +24,30 @@ module.exports = {
 
         //req.body recibo el type, ioc, y notes. 
         let ioc = req.body.ioc;
+        //118.193.41.157
         if(req.body.type == "ip"){
             
             const theSameObject = defaultTimedInstance.ipLookup(ioc, function(err, value){
                 if (err) {
                   console.log('Well, crap.');
-                  //console.log(err);
+                  console.log(err);
                   return;
                 }
                
                 let datos = JSON.parse(value);
+                //console.log(value)
                 let lastAnalysis = datos.data.attributes.last_analysis_stats;
                
                 let whoisData = datos.data.attributes.whois
-                //parse WhoisData
+                //console.log("esto es whoisData")
+                //console.log(whoisData)
+                
+                let whois = {}
+                if (whoisData){
+
+                                    //parse WhoisData
                 const str = whoisData;
+                console.log(str)
                 const toObject = (str) => {
                   const json = str.replace(/([^\:]+)\:([^\n]+)\n/g, (_, p1, p2) => {
                     return `"${p1.replace(/\s+/g, '')}":"${p2.trim()}",`;
@@ -56,16 +65,20 @@ module.exports = {
                     address: whoisInfo.Address,
                     description: whoisInfo.descr
                 }
+
+                } 
+                
                 //Armo json para devolver al front y guardar en DB.
+                // info: JSON.stringify(utilsAnalysis.getParcialIp(req.body.ioc))
                 let data = {
-                    id_investigador : req.body.id_investigador,
+                    id_investigation : req.body.id_investigation,
                     ioc: req.body.ioc,
                     description: req.body.description,
                     result: lastAnalysis,
                     whois: whois,
                     timestamp: Date.now(),
                     type: "ip",
-                    info: JSON.stringify(utilsAnalysis.getParcialIp(req.body.ioc))
+                    info: utilsAnalysis.getParcialIpToObject(req.body.ioc),
                 }
 
                 //guardar datos en DB
@@ -79,9 +92,12 @@ module.exports = {
             //const hashed = nvt.sha256('http://wikionemore.com/');
             console.log("este es el ioc" + ioc)
             console.log(ioc.slice(-1))
-            if (ioc.slice(-1) !== "/"){
-                ioc += "/"
+            if (ioc){
+                if (ioc.slice(-1) !== "/"){
+                    ioc += "/"
+                }
             }
+           
             console.log(ioc)
             const hashed = nvt.sha256(ioc);
             console.log("este es el ioc hashed" + hashed)
@@ -103,6 +119,7 @@ module.exports = {
                 }
 
                 let data = {
+                    id_investigation: req.body.id_investigation,
                     ioc: req.body.ioc,
                     description: req.body.description,
                     result: lastAnalysis,
@@ -142,6 +159,7 @@ module.exports = {
                 }
 
                 let data = {
+                    id_investigation: req.body.id_investigation,
                     ioc: req.body.ioc,
                     description: req.body.description,
                     result: lastAnalysis,
@@ -178,6 +196,7 @@ module.exports = {
                 }
 
                 let data = {
+                    id_investigation: req.body.id_investigation,
                     ioc: req.body.ioc,
                     description: req.body.description,
                     result: lastAnalysis,
@@ -197,7 +216,6 @@ module.exports = {
         } 
         catch (error) {
             console.log(error)
-            
         }
     
     
@@ -287,20 +305,34 @@ module.exports = {
                 //console.log(objs.length)
                 
                  invs =  utilsAnalysis.getIdFromObjects(objs);
-                 console.log(invs)
+                 //console.log(invs)
 
-                 for (i=0; i < invs.length;i++){
-                     analysis.push(await utilsAnalysis.getAnalysisByInvestigationId(invs[i]));
+                //elimino los repetidos
+                 let invsW = invs.filter((item,index)=>{
+                    return invs.indexOf(item) === index;
+                  })
+
+                  //console.log(invsW)
+
+                 for (i=0; i < invsW.length;i++){
+                     analysis.push(await utilsAnalysis.getAnalysisByInvestigationId(invsW[i]));
                  }
 
                  let result = await utilsAnalysis.getTop3Analysis(analysis);
-                 let filtrado = result.filter( dato => dato.ioc !== ioc)
+                 //console.log("esto es resulttttttttttttttttttttttttt")
+                 //console.log(result)
+                 let filtrado = result.filter((item,index)=>{
+                    return result.indexOf(item) === index;
+                  })
+                 
+                 //result.filter( dato => dato.ioc !== ioc)
+                 //console.log("esto es filtradooooooooooooooooooooooo")
                  //console.log(filtrado)
                  res.send(filtrado)
             } else 
             {
                 console.log("el ioc no existe")
-               /* console.log(objs)
+                console.log(objs)
 
 
                 //filtrar x tipo y dsp por los analysis malicious >0
@@ -310,7 +342,7 @@ module.exports = {
 
                 if (type == "ip"){
                     console.log("Es una ip")
-                    console.log(ioc)
+                    //console.log(ioc)
 
                     //obtengo parcial del ioc
                     let partialIoc = [];
@@ -323,12 +355,14 @@ module.exports = {
 
                     maliciousIocs = await utilsAnalysis.getIocByTypeAndMalicious("ip");
 
-                    //console.log(maliciousIocs.length)
+                    //console.log(maliciousIocs)
 
                     //obtengo los partial de esas ioc y comparo con el ioc
                     let results = [];
 
                     results = await utilsAnalysis.getIpsWithSameRange(partialIoc, maliciousIocs);
+                    //console.log("esto es results")
+                    //console.log(results)
 
                     res.send(results)
                     //console.log(results)
@@ -368,7 +402,7 @@ module.exports = {
 
 
                 res.send("objeto no existe");
-*/
+
             }
 
             
@@ -406,13 +440,15 @@ module.exports = {
                  invs =  utilsAnalysis.getIdFromObjects(objs);
                  //console.log(invs)
 
+
                  for (i=0; i < invs.length;i++){
                      analysis.push(await utilsAnalysis.getAnalysisByInvestigationId(invs[i] ));
+                     console.log(i)
                  }
 
                  let result = await utilsAnalysis.getTop3Analysis(analysis);
                  let filtrado = result.filter( dato => dato.ioc !== ioc)
-                 //console.log(filtrado)
+                 console.log(filtrado)
                  res.send(filtrado)
             } else 
             {
@@ -499,6 +535,7 @@ module.exports = {
 
     isindb : async function(req, res){
         console.log('entro en isindb')
+        console.log(req.body)
         try {
             let analysis = await db.InvestigationDetail.findOne({
                 where: {
@@ -506,9 +543,23 @@ module.exports = {
                 },
                 raw: true});
             
+            console.log("Esto es analysis de isindb")
             console.log(analysis)
 
             if (analysis){
+                //id_investigationDetail: analysis.id_investigationDetail,
+                let toSave = {
+                    
+                    id_investigation: req.body.id_investigation,
+                    description : req.body.description,
+                    ioc: analysis.ioc,
+                    result: JSON.parse(analysis.result),
+                    whois: JSON.parse(analysis.whois),
+                    type: analysis.type,
+                    info: analysis.info
+                }
+                utilsAnalysis.save(toSave);
+
                 let parsed = {
                     id_investigationDetail: analysis.id_investigationDetail,
                     id_investigation: analysis.id_investigationDetail,
@@ -531,6 +582,10 @@ module.exports = {
 
         //si es hash ????
     }
+       
+
+   
+
     
     
 }

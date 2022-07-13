@@ -17,7 +17,7 @@ module.exports = {
            //ioc = JSON.parse(ioc);
             console.log("ESTO ES IOC:" +ioc.ioc);
            let obj =  await db.InvestigationDetail.create({
-                id_investigador: ioc.id_investigador,
+                id_investigation: ioc.id_investigation,
                 description: ioc.description,
                 ioc: ioc.ioc,
                 result: JSON.stringify(ioc.result),
@@ -28,6 +28,7 @@ module.exports = {
 
             });
             console.log("El Objeto guardado es:"+obj)
+            //console.log(obj)
             return obj;//res.render("Analysis", {});//aca van los iocs para una investigación
             
         } catch (error) {
@@ -43,8 +44,6 @@ module.exports = {
 
             let invs = [];
 
-            
-           
             for (let i=0; i < objs.length; i++){
                 //console.log("i es "+i)
       
@@ -69,7 +68,7 @@ module.exports = {
     
     getAnalysisByInvestigationId: async function(id) {
 
-        console.log("entro a getAnalysisByInvestigationId")
+        console.log("--------------------------------------------entro a getAnalysisByInvestigationId")
         
 
         try {
@@ -99,7 +98,7 @@ module.exports = {
 
         try {
 
-            //console.log("entro a getTop3Analysis")
+            console.log("--------------------------------------------------------entro a getTop3Analysis")
             //console.log(analysis)
     
             let list = [];
@@ -110,7 +109,12 @@ module.exports = {
             for (i=0; i < analysis.length;i++){
     
                 let temp = JSON.parse(analysis[i][0].result);
+                //console.log(analysis[i][0].ioc)
+                //console.log(analysis[i][0].description)
+                //console.log("es malicious?")
                 if (temp.malicious > 0){
+                    
+                    //console.log(temp.malicious)
                     analysisMalicious.push(analysis[i][0]);
                 }
     
@@ -169,8 +173,8 @@ module.exports = {
               
             }
 
-            
-            //console.log(iocs.length)
+            console.log("getIocByTypeAndMalicious")
+            console.log(iocs.length)
            // console.log(iocsMalicious.length)
 
             return(iocsMalicious);
@@ -179,11 +183,32 @@ module.exports = {
     getIpsWithSameRange: async function (partial, iocs){
         
         let result = [];
-        console.log("zzzzzzzzzzzzzz")
-        console.log(partial)
+        console.log("getIpsWithSameRange")
 
         try {
 
+            //partial es la parte que quiero comparar
+            //iocs es el array de objetos. acá hay que pasar a array el parametro info y compararlo con partial
+            let partialIoc = [];
+
+            for(i=0;i<iocs.length;i++){
+                partialIoc = Object.values(JSON.parse(iocs[i].info))
+                
+
+                if (JSON.stringify(partial) === JSON.stringify(partialIoc)){
+                    result.push(iocs[i].ioc)
+                }
+            }
+
+            let resultSinRepetidos = result.filter((item,index)=>{
+                return result.indexOf(item) === index;
+              })
+
+            return resultSinRepetidos;
+
+            //partial es la parte que quiero comparar
+            //iocs es el array de objetos. acá hay que pasar a array el parametro info y compararlo con partial
+/*
             for(i=0;i<iocs.length;i++){
 
                console.log(iocs[i].ioc)
@@ -206,7 +231,7 @@ module.exports = {
               })
 
             return resultSinRepetidos;
-            
+            */
         } catch (error) {
             console.log(error)
             
@@ -222,11 +247,11 @@ module.exports = {
 
         descriptionArray = [];
         let keywords = ["malware", "command and control", "botnets", "botnet", "compromised website", "encrypted", "keylogger", "malicious", "phishing",
-                            "spyware", "mobile", "hacking", "security", "facebook", "youtube", "exploits", "suspicious"]
+                            "spyware", "mobile", "hacking", "security", "facebook", "youtube", "exploit", "suspicious"]
 
         descriptionArray = description.split(" ");
 
-        console.log(descriptionArray);
+        //console.log(descriptionArray);
         //console.log(keywords)
 
 
@@ -259,7 +284,7 @@ module.exports = {
 
         let keywordInUrlIoc = [];
         let hola = [];
-        console.log(maliciousIocsWithKeywords.length)
+        //console.log(maliciousIocsWithKeywords.length)
 
         let temp = ""
         for (i=0;i<maliciousIocsWithKeywords.length;i++){
@@ -271,9 +296,9 @@ module.exports = {
             const found = matchedKeyword.some(r => 
                 keywordInUrlIoc.includes(r));
    
-            console.log(temp)
-            console.log(keywordInUrlIoc)
-            console.log(found)
+           // console.log(temp)
+           // console.log(keywordInUrlIoc)
+            //console.log(found)
 
             if (found){
                 console.log("entro al if")
@@ -283,7 +308,7 @@ module.exports = {
             
 
         }
-        console.log(hola)
+        //console.log(hola)
 
         return (hola);
         //console.log(maliciousIocsWithKeywords[2])
@@ -297,7 +322,7 @@ module.exports = {
         let PATTERN = 'Forcepoint ThreatSeeker';
         let filtrado = [];
 
-        console.log(maliciousIocs.length)
+        //console.log(maliciousIocs.length)
 
         for (i=0;i<maliciousIocs.length;i++){
            
@@ -310,6 +335,21 @@ module.exports = {
         }
         result = this.maliciousIocsWithMatchedKeyword(maliciousIocsWithKeywords, matchedKeyword)
         return (result)
+    },
+
+    //this.getParcialIpToObject(req.body.ioc)
+    getParcialIpToObject : function (ip){
+
+        console.log('------------------------------entro a getParcialIpToObject ')
+        let partial = this.getParcialIp(ip)
+       // console.log(partial)
+
+        let ipObj = {
+            '1': partial[0],
+            '2': partial[1]
+        }
+
+        return JSON.stringify(ipObj);
     }
 
 
