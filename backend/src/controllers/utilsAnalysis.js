@@ -173,11 +173,52 @@ module.exports = {
               
             }
 
-            console.log("getIocByTypeAndMalicious")
-            console.log(iocs.length)
-           // console.log(iocsMalicious.length)
 
             return(iocsMalicious);
+
+    },
+    
+    getIocByIDAndMalicious: async function(id){
+
+        let iocs = await db.InvestigationDetail.findAll({
+            where: {
+                id_investigation: id
+            },
+            raw: true});
+
+            let iocsMalicious = [];
+            let mostMalicious = iocs[0];
+            let tempMost = "";
+    
+            //filtro malicious > 0
+    
+            for (i=0; i < iocs.length;i++){
+    
+                let temp = JSON.parse(iocs[i].result);
+                
+
+                if (temp.malicious > 0){
+                    
+                    let tempMost = JSON.parse(mostMalicious.result)
+                   
+                    if (temp.malicious > tempMost.malicious)
+                    {
+                        mostMalicious = iocs[i];
+                    }
+                    
+                    iocsMalicious.push(iocs[i]);
+                }
+    
+              
+            }
+
+            console.log("mostMalicious es")
+            console.log(mostMalicious)
+            
+            let result = [iocsMalicious, mostMalicious]
+
+            //return (iocsMalicious);
+            return result;
 
     },
     getIpsWithSameRange: async function (partial, iocs){

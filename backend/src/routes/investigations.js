@@ -12,7 +12,13 @@ router.get("/investigation/:id/closed", analysisController.isClosed)
 
 router.get("/investigation/:id/requested", analysisController.isRequested)
 
+router.get("/investigation/:id/validated", analysisController.isValidated)
+
 router.get("/investigation/toreview", analysisController.toReview)
+
+router.get("/investigation/myreview/:id", analysisController.myReviews)
+
+router.get("/investigation/statistics/:id", analysisController.getStatistics)
 
 router.get("/investigation/:id/commented", analysisController.isCommented)
 

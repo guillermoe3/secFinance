@@ -251,6 +251,24 @@ module.exports = {
         }
 
     },
+    getAllbyInvestigationID: async function (id) {
+        
+    
+        try {
+            let analysis = await db.InvestigationDetail.findAll({
+                where: {
+                    id_investigation: id
+                },
+                raw: true});
+            
+            return(analysis);
+            
+        } catch (error) {
+            console.log(error);
+            
+        }
+
+    },
     update: async function(req, res) {
                 
         let updated  = await db.InvestigationDetail.update({
@@ -591,13 +609,19 @@ module.exports = {
         }
     }, 
 
-    getInfo : function(ioc, type){
-        //si es un url o dominio, get keywords
+    getMaliciousIocs : async function(id){
+        let results = [];
 
-        //si es ip getParcial
+        //cambiar getIocByTypeAndMalicious por ID de la investigación.
 
-        //si es hash ????
+        results = await utilsAnalysis.getIocByIDAndMalicious(id);
+ 
+        return (results)
+
+
     }
+
+    
        
 
    

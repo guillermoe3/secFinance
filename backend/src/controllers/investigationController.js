@@ -1,6 +1,7 @@
 const dotEnv = require("dotenv").config();
 const { response } = require("express");
 const db = require("../database/models"); 
+const analysisController = require("./analysisController")
 
 
 
@@ -26,7 +27,8 @@ module.exports = {
             isShared: true, 
             title: req.body.title,
             validated: false, 
-            comments : ""
+            comments : "",
+            review: 0
             
             });
         //console.log(db.Investigation.id_investigation); 
@@ -174,6 +176,24 @@ module.exports = {
             
         }
     }, 
+    isValidated : async function(req, res){
+      
+        try {
+            let investigation = await db.Investigation.findAll({
+                where: {
+                    id_investigation: req.params.id
+                },
+                raw: true});
+
+                if(investigation[0].validated == "1"){
+                    res.send(true);
+                } else res.send(false);
+            
+        } catch (error) {
+            console.log(error)
+            
+        }
+    }, 
     toReview : async function(req, res){
         try {
 
@@ -191,6 +211,23 @@ module.exports = {
             console.log(error)
         }
     }, 
+    myReviews : async function(req, res){
+        try {
+
+            let investigations = await db.Investigation.findAll({
+                where: {
+                    id_analyst: req.params.id
+                },
+                raw: true
+            })
+
+            res.send(investigations)
+            
+        } catch (error) {
+            
+            console.log(error)
+        }
+    },
 
     isCommented: async function (req, res){
         try {
@@ -216,6 +253,30 @@ module.exports = {
             console.log(error)
             
         }
+    }, 
+    getStatistics : async function (req, res){
+        let id = req.params.id;
+
+        let analysis = await analysisController.getAllbyInvestigationID(id);
+    
+        let malicious = await analysisController.getMaliciousIocs(id);
+
+        let total = analysis.length;
+        let mal = malicious[0].length;
+        
+        
+        let infoIoc = JSON.parse(malicious[1].result);
+
+        let stats = {
+            "totalCount": analysis.length,
+            "maliciousCount": malicious[0].length,
+            "percentThreat" : `%${(mal*100)/total}`,
+            "mostVotedMalicious": malicious[1].ioc,
+            "cantMalicious": `${infoIoc.malicious}`
+        
+        }
+        res.send(stats)
+
     }
     
 
