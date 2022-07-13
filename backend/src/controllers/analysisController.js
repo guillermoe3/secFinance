@@ -382,8 +382,7 @@ module.exports = {
                     let matchedKeyword = [];
                     matchedKeyword = utilsAnalysis.getCategoryFromUrl(description);
 
-                    console.log("esto es matchedKeywordddddddd")
-                    console.log(matchedKeyword)
+                   
 
                     //filtro las categorias del resto de los iocs filtrados y muestro sugerencias. 
 
@@ -392,11 +391,28 @@ module.exports = {
                      let result = [];
                     
                      result = utilsAnalysis.getUrlsRelated(maliciousIocs, matchedKeyword)
-
-                    res.send(result)
+                        console.log("esto es result")
+                        console.log(result)
+                    res.send(result)//result
 
                 } else if (type == "hash"){
                     console.log("Es un hash")
+
+                    let maliciousIocs = [];
+
+                    maliciousIocs = await utilsAnalysis.getIocByTypeAndMalicious("hash");
+
+                    let matchedKeyword = [];
+                    matchedKeyword = utilsAnalysis.getCategoryFromUrl(description);
+                    console.log(matchedKeyword)
+                    
+                    let results = [];
+
+                    results = await utilsAnalysis.getHashes(matchedKeyword, maliciousIocs);
+
+                    res.send(result)
+
+
                 }
 
 

@@ -196,7 +196,8 @@ module.exports = {
                 
 
                 if (JSON.stringify(partial) === JSON.stringify(partialIoc)){
-                    result.push(iocs[i].ioc)
+                    result.push({
+                        ioc: iocs[i].ioc})
                 }
             }
 
@@ -247,7 +248,8 @@ module.exports = {
 
         descriptionArray = [];
         let keywords = ["malware", "command and control", "botnets", "botnet", "compromised website", "encrypted", "keylogger", "malicious", "phishing",
-                            "spyware", "mobile", "hacking", "security", "facebook", "youtube", "exploit", "suspicious"]
+                            "spyware", "mobile", "hacking", "security", "facebook", "youtube", "exploit", "suspicious", "sospechoso", "binario", "troyano", "bancario", "galicia", "macro",
+                        "uala", "ripio", "fintech", "atm", "exe", "js", "vbs", "rar"]
 
         descriptionArray = description.split(" ");
 
@@ -315,7 +317,25 @@ module.exports = {
     },
 
     getUrlsRelated: function (maliciousIocs, matchedKeyword){
+    
 
+        let result = [];
+        let temp = [];
+
+        for (i=0;i<maliciousIocs.length;i++){
+            temp = Object.values((JSON.parse(maliciousIocs[i].info)))
+            //console.log(temp[0])
+
+            if(temp[0] == matchedKeyword ){
+                result.push({ioc: maliciousIocs[i].ioc})
+
+            }
+        }
+        
+
+        return (result)
+    
+        /*
         let maliciousIocsWithKeywords =[];
         let result = [];
 
@@ -334,7 +354,10 @@ module.exports = {
                     
         }
         result = this.maliciousIocsWithMatchedKeyword(maliciousIocsWithKeywords, matchedKeyword)
-        return (result)
+        
+        */
+        
+        
     },
 
     //this.getParcialIpToObject(req.body.ioc)
@@ -350,6 +373,40 @@ module.exports = {
         }
 
         return JSON.stringify(ipObj);
+    }, 
+
+    getHashes : function (matchedKeyword, maliciousIocs){
+
+        //recorrer maliciousIocs y buscar la subcadena matchedKeyword en info de cada maliciousIocs
+
+        let result = [];
+
+        let malioc = "";
+        let key = "";
+
+        for (i=0;i < maliciousIocs.length;i++ ){
+            //console.log((maliciousIocs[i].info).toLowerCase());
+            //console.log("matchedKeyword")
+            //console.log((matchedKeyword[0]).toLowerCase())
+
+            malioc = (maliciousIocs[i].info).toLowerCase();
+            console.log(malioc)
+            key = (matchedKeyword[0]).toLowerCase();
+            console.log(key)
+
+            console.log(malioc.indexOf(key));
+
+            if (malioc.indexOf(key) != -1){
+                result.push({
+                    ioc: maliciousIocs[i].ioc
+                })
+            }
+            
+            //console.log(maliciousIocs[i].info.indexOf(matchedKeyword[0]));
+        }
+
+        return result;
+
     }
 
 
