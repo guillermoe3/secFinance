@@ -166,7 +166,7 @@ let userController = {
                 },
                 raw: true
             });
-            res.json(users);
+            res.send(JSON.stringify(users));
             
         } catch (error) {
             console.log(error)

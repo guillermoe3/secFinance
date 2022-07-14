@@ -13,6 +13,8 @@ router.get('/users/:id', userController.userById);
 
 router.get('/user/:id', userController.getUserById);
 
+router.get('/users/business/:id', userController.getUsersByBusinessID);
+
 router.post('/usersEmail', userController.userByEmail);
  
 router.post('/users', userController.register);

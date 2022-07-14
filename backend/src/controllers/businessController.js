@@ -34,6 +34,25 @@ module.exports = {
             console.log(error)
             
         }
+    }, 
+
+    getNameById : async function (req, res){
+        
+        console.log(req.body)
+       
+        try {
+            let business = await db.Business.findAll({
+                where: {
+                    id_business : req.params.id
+                },raw:true});
+            
+                res.send(business)
+        
+        } catch (error) {
+
+            console.log(error)
+            
+        }
     }
 
 
