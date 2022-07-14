@@ -28,6 +28,16 @@ let userController = {
             
         }
     },
+    getUserById: async function (req, res) {
+        try {
+            const user = await db.Users.findByPk(req.params.id)
+            res.send(user.email);
+            
+        } catch (error) {
+            console.log(error)
+            
+        }
+    },
     userByEmail: async function (req, res) {
         try {
             const user = await db.Users.findOne({
@@ -79,6 +89,8 @@ let userController = {
             const name = user[0].name;
             const email = user[0].email;
             const role = user[0].role;
+            const id_business = user[0].id_business;
+            console.log(user)
             const accessToken = jwt.sign({userId, name, email}, process.env.ACCESS_TOKEN_SECRET,{
                 expiresIn: '15s'
             });
@@ -96,7 +108,7 @@ let userController = {
                 httpOnly: true,
                 maxAge: 24 * 60 * 60 * 1000
             });
-            res.json({userId, email, role, accessToken });
+            res.json({userId, email, role, accessToken, id_business });
         } 
         
         catch (error) {

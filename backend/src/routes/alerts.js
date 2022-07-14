@@ -1,14 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const alertController = require("../controllers/alertController");
-const alertDetailController = require("../controllers/alertDetailController");
 
 
-router.get("/alerts", alertController.index);
-router.post("/alert", alertController.create);
 
-router.get("/alertDetail", alertDetailController.index);
-router.post("/alertDetail", alertDetailController.create);
+router.get("/alerts", alertController.getAll);
+router.get("/alerts/business/:id", alertController.getAlertsByIdBusiness);
+router.post("/alerts", alertController.create);
+
+
 
 
 

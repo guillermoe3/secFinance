@@ -21,6 +21,9 @@ const Users = sequelize.define('Users',{
     role:{
         type: DataTypes.STRING
     },
+    id_business:{
+        type: DataTypes.STRING
+    },
     refresh_token:{
         type: DataTypes.TEXT
     }

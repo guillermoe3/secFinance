@@ -28,13 +28,14 @@ module.exports = {
 
             let business = await db.Business.findAll({raw:true});
             
-            res.send(business);
+            res.send(JSON.stringify(business));
             
         } catch (error) {
             console.log(error)
             
         }
     }
+
 
 
 }

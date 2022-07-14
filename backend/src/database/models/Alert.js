@@ -12,7 +12,19 @@ module.exports = (sequelize, DataTypes) => {
         category: {
             type: DataTypes.STRING,
         },
-        description: {
+        titulo: {
+            type: DataTypes.STRING
+        },
+        severity: {
+            type: DataTypes.STRING
+        },
+        body1: {
+            type: DataTypes.STRING
+        },
+        body2: {
+            type: DataTypes.STRING
+        },
+        business: {
             type: DataTypes.STRING
         }
      
