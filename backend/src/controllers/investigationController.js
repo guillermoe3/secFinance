@@ -84,6 +84,21 @@ module.exports = {
         }
 
     }, 
+    countInvByUserId: async function (id) {
+        try {
+            let investigation = await db.Investigation.findAll({
+                where: {
+                    id_user: id
+                },
+                raw: true});
+            res.send(investigation.length);
+            
+        } catch (error) {
+            console.log(error);
+            
+        }
+
+    },
     update: async function (req, res) {
 
         //console.log(req.body)

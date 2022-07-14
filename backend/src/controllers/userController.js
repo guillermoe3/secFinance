@@ -3,6 +3,7 @@ const { resolveNaptr } = require("dns");
 const bcrypt = require('bcryptjs');
 const Users = require("../database/models/UserModel")
 const jwt = require("jsonwebtoken")
+const investigationController = require("./investigationController")
 
 
 
@@ -11,7 +12,7 @@ let userController = {
     getUsers: async function (req, res) {
         try {
             const users = await db.Users.findAll({
-                attributes:['id_usuario','name','email']
+                attributes:['id_usuario','name','email', 'active', 'id_business']
             });
             res.json(users);
         } catch (error) {
@@ -64,7 +65,8 @@ let userController = {
                 name: name,
                 lastname: lastname,
                 email: email,
-                password: hashPassword
+                password: hashPassword,
+                role: "unassigned"
             });
             res.json({msg: "Registration Successful"});
         } catch (error) {
@@ -133,6 +135,43 @@ let userController = {
         });
         res.clearCookie('refreshToken');
         return res.sendStatus(200);
+    }, 
+
+    getStats : async function (req, res){
+        try {
+            let result = [
+                { analista: 'Analista1', cantidad: 2.525 },
+                { analista: 'Analista2', cantidad: 3.018 },
+                { analista: 'Analista3', cantidad: 3.682 },
+                { analista: 'Analista4', cantidad: 4.440 },
+                { analista: 'Analista5', cantidad: 5.310 },
+                { analista: 'Analista6', cantidad: 6.127 },
+                { analista: 'Analista7', cantidad: 6.930 },
+              ]
+
+              res.send(result)
+            
+        } catch (error) {
+            console.log(error)
+            
+        }
+    }, 
+    getUsersByBusinessID: async function (req, res){
+        try {
+
+            const users = await db.Users.findAll({
+                
+                where: {
+                    id_business: req.params.id
+                },
+                raw: true
+            });
+            res.json(users);
+            
+        } catch (error) {
+            console.log(error)
+            
+        }
     }
 
 }

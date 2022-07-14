@@ -7,6 +7,8 @@ const router = express.Router();
 //verifyToken, 
 router.get('/users', userController.getUsers);
 
+router.get('/users/stats', userController.getStats);
+
 router.get('/users/:id', userController.userById);
 
 router.get('/user/:id', userController.getUserById);
