@@ -29,6 +29,16 @@ let userController = {
             
         }
     },
+    getState: async function (req, res) {
+        try {
+            const user = await db.Users.findByPk(req.params.id)
+            res.send(JSON.stringify(user.active));
+            
+        } catch (error) {
+            console.log(error)
+            
+        }
+    },
     getUserById: async function (req, res) {
         try {
             const user = await db.Users.findByPk(req.params.id)
@@ -167,6 +177,26 @@ let userController = {
                 raw: true
             });
             res.send(JSON.stringify(users));
+            
+        } catch (error) {
+            console.log(error)
+            
+        }
+    }, 
+    update : async function(req, res){
+        console.log(req.body)
+        try {
+
+            let updated  = await db.Users.update({
+                active: req.body.active,
+                id_business: req.body.id_business,
+            
+            },{
+                where: {id_usuario: req.params.id}
+            })
+    
+           console.log(updated);
+           res.sendStatus(200)
             
         } catch (error) {
             console.log(error)

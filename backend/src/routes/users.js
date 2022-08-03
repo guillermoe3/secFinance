@@ -21,6 +21,11 @@ router.post('/users', userController.register);
 
 router.post('/login', userController.login);
 
+router.put("/user/:id", userController.update);
+
+router.get("/user/status/:id", userController.getState);
+
+
 //router.get('/token', refreshToken);
 
 

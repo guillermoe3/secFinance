@@ -31,13 +31,15 @@ module.exports = {
                 if (err) {
                   console.log('Well, crap.');
                   console.log(err);
+                  res.send("400")
+                  
                   return;
                 }
                
                 let datos = JSON.parse(value);
                 //console.log(value)
                 let lastAnalysis = datos.data.attributes.last_analysis_stats;
-               
+                
                 let whoisData = datos.data.attributes.whois
                 //console.log("esto es whoisData")
                 //console.log(whoisData)
@@ -105,7 +107,10 @@ module.exports = {
                 if (err) {
                   console.log('Well, crap.');
                   console.log(err);
-                  return;
+                  //return
+                  res.send("400")
+                  return
+                  ;
                 }
                
                 let datos = JSON.parse(value);
@@ -143,6 +148,7 @@ module.exports = {
                 if (err) {
                   console.log('Well, crap.');
                   console.log(err);
+                  res.send("400")
                   return;
                 }
                 
@@ -180,6 +186,8 @@ module.exports = {
                 if (err) {
                   console.log('Well, crap.');
                   console.log(err);
+                  res.send("400")
+                  
                   return;
                 }
 
@@ -443,6 +451,7 @@ module.exports = {
             
    
         } catch (error) {
+            //ver enviar otro valor
             res.send(false);
             
         }

@@ -26,6 +26,9 @@ const Users = sequelize.define('Users',{
     },
     refresh_token:{
         type: DataTypes.TEXT
+    },
+    active: {
+        type: DataTypes.BOOLEAN
     }
 },{
     tableName: "users",
