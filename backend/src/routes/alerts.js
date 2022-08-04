@@ -5,6 +5,7 @@ const alertController = require("../controllers/alertController");
 
 
 router.get("/alerts", alertController.getAll);
+router.get("/alerts/:id", alertController.getById);
 router.get("/alerts/business/:id", alertController.getAlertsByIdBusiness);
 router.post("/alerts", alertController.create);
 

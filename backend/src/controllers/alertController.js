@@ -15,6 +15,23 @@ module.exports = {
             
         }
     }, 
+    getById: async function(req, res){
+        try {
+
+            let alert = await db.Alert.findOne(
+                {
+                    where: {
+                        id_alerta: req.params.id,
+                    },
+                    raw: true});
+           
+                res.send(JSON.stringify(alert))
+            
+        } catch (error) {
+            console.log(error)
+            
+        }
+    },
     create: async function (req, res) {
         try {
 
