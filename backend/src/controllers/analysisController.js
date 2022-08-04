@@ -629,6 +629,53 @@ module.exports = {
         return (results)
 
 
+    },
+    getCantByType: async function(req, res){
+
+        try {
+            let all = await utilsAnalysis.getAll();
+           
+            let malicious = 0;
+            let suspicious = 0;
+            let harmless = 0;
+            let undetected = 0;
+
+            for (i=0;i<all.length;i++){
+                //console.log(all[i].result)
+                let result = JSON.parse(all[i].result)
+                console.log(result)
+
+                if (result.malicious > 0){
+                    malicious = malicious +1;
+                }
+
+                if (result.suspicious > 0){
+                    suspicious = suspicious +1;
+                }
+
+                if (result.harmless > 0){
+                    harmless = harmless +1;
+                }
+
+                if (result.undetected > 0){
+                    undetected = undetected +1;
+                }
+
+                //all[i].result;
+            }
+
+            let labels = ["malicious","suspicious",  "harmless", "undetected"]
+
+            let data = [malicious,suspicious,  harmless, undetected]
+        
+
+            res.send(JSON.stringify({labels, data}))
+        } catch (error) {
+            console.log(error)
+            
+        }
+
+       
     }
 
     

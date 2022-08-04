@@ -448,7 +448,22 @@ module.exports = {
 
         return result;
 
-    }
+    },
+    getAll: async function() {
+
+        try {
+            let analysis = await db.InvestigationDetail.findAll(
+                {
+                    raw: true
+                });
+            return analysis;
+            
+        } catch (error) {
+            console.log(error);
+            
+        }
+
+    },
 
 
 }

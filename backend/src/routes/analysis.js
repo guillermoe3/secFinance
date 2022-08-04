@@ -11,6 +11,7 @@ router.post("/analysis/related", analysisController.getRelatedObjects)
 router.post("/analysis/isindb", analysisController.isindb)
 
 
+router.get("/analysis/piechart", analysisController.getCantByType)
 
 router.get("/analysis", analysisController.getAll);
 router.get("/analysis/:id", analysisController.getAllbyInvestigation);
