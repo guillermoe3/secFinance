@@ -49,6 +49,20 @@ let userController = {
             
         }
     },
+    getUserById2: async function (id) {
+        console.log("esto es id")
+        console.log(id)
+        
+        try {
+            const user = await db.Users.findByPk(id)
+            return (user.email);
+            
+        } catch (error) {
+            console.log(error)
+            
+        }
+    },
+    
     userByEmail: async function (req, res) {
         try {
             const user = await db.Users.findOne({

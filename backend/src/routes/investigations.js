@@ -4,6 +4,9 @@ const analysisController = require("../controllers/investigationController");
 
 
 router.get("/investigations", analysisController.getAll);
+
+router.get("/investigations/barChart", analysisController.getInfoBarChart);
+
 router.get("/investigations/:user/:id", analysisController.getById);
 router.get("/investigations/:user", analysisController.getByUserId);
 router.post("/investigation", analysisController.create);

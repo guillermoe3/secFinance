@@ -2,6 +2,8 @@ const dotEnv = require("dotenv").config();
 const { response } = require("express");
 const db = require("../database/models"); 
 const analysisController = require("./analysisController")
+const utilsInvestigations = require("./utilsInvestigations")
+const userController = require("./userController")
 
 
 
@@ -292,6 +294,50 @@ module.exports = {
         }
         res.send(stats)
 
+    }, 
+    getInfoBarChart: async function (req, res){
+
+
+
+        let allInv = await utilsInvestigations.getAll();
+        console.log(allInv)
+        console.log(allInv.length);
+
+
+        //labels: ["USA", "Mexico", "Arg", "Uru"],
+        //Nombre del usuario
+
+        let users = [];
+        let cant = [];
+
+
+
+        //data: [322, 70, 48, 2]
+        //cantidad de investigaciones
+
+        for (i=0;i < allInv.length ; i++){
+            
+            users.push(allInv[i].id_user);
+            cant.push(allInv[i].cont_id_investigation)
+        }
+
+
+        console.log(users)
+        let users2 = []; 
+
+        for (j=0; j < users.length; j++){
+            
+            let email = await userController.getUserById2(users[j]);
+            //console.log(email)
+
+            users2.push(email)
+
+        }
+        
+    
+
+        res.send(JSON.stringify({users2, cant}))
+
     }
     
 
@@ -299,3 +345,5 @@ module.exports = {
     
   
 }
+
+
