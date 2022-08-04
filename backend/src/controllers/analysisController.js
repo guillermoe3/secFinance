@@ -44,6 +44,12 @@ module.exports = {
                 //console.log("esto es whoisData")
                 //console.log(whoisData)
                 
+
+
+
+                try {
+
+
                 let whois = {}
                 if (whoisData){
 
@@ -85,8 +91,15 @@ module.exports = {
 
                 //guardar datos en DB
                 let saveObject = utilsAnalysis.save(data);//JSON.stringify(
-
                 res.send(data);
+                    
+                } catch (error) {
+                    console.log(error)
+                    res.send("400")
+                    
+                }
+
+                
               });
             
 

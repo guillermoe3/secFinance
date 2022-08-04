@@ -204,6 +204,7 @@ let userController = {
             let updated  = await db.Users.update({
                 active: req.body.active,
                 id_business: req.body.id_business,
+                role: req.body.role
             
             },{
                 where: {id_usuario: req.params.id}
